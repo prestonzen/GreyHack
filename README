@@ -1,7 +1,7 @@
 ///x a [ip_address] -- get info about IP, basically nmap but better
 ///x b [ip_address] [port] -- mem scanner
 ///x c [ip_address] [port] [memory_address] [vulnerability] -- exploit
-///x rl [ip_address] [port] [user] [password] -- corrupt Logs
+///x rl [ip_address] [port] [user] [password] -- corrupt Logs or remove logs = rl
 ///x rlssh [ip_address] [port] [user] [password] -- connect & corrupt Logs
 ///x installSSH
 ///x z [username] -- user switcher
@@ -21,5 +21,5 @@ x upd is basically
 apt-get update ; apt-get upgrade
 
 --- Examples ---
-#Corrupting target log files
-x rl aserver
+#Corrupting target log files of the attacked server
+x rl aserver 
