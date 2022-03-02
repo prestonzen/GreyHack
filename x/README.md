@@ -11,7 +11,7 @@ x installSSH
 x ipscan [ip_address] -- get info about IP, basically nmap but better
 x vulnscan [ip_address] [port] -- Library vulnerability scanner
 x exploit [ip_address] [port] [memory_address] [vulnerability] -- exploit
-x exploit [ip_address] [router] -- you should use it if there's no open ports or if there's no vulns.
+x exploit [ip_address] router -- you should use it if there's no open ports or if there's no vulns.
 
 ##System
 x me -- local router & pc + public router & pc ip info
