@@ -1,14 +1,28 @@
-Commands
-x a [ip_address] -- get info about IP, basically nmap but better
-x b [ip_address] [port] -- mem scanner
-x c [ip_address] [port] [memory_address] [vulnerability] -- exploit
-x rl [ip_address] [port] [user] [password] -- corrupt Logs or remove logs = rl
-x rlssh [ip_address] [port] [user] [password] -- connect & corrupt Logs
+#Commands
+
+##Authentication
+x auth [passwd] -- get access to x
+
+##Connections
+x aserver -- safe connect to aserver
 x installSSH
-x z [username] -- user switcher
-x me -- local router & pc + public router & pc ips
+
+##Hacking
+x ipscan [ip_address] -- get info about IP, basically nmap but better
+x vulnscan [ip_address] [port] -- Library vulnerability scanner
+x exploit [ip_address] [port] [memory_address] [vulnerability] -- exploit
+x exploit [ip_address] [router] -- you should use it if there's no open ports or if there's no vulns.
+
+##System
+x me -- local router & pc + public router & pc ip info
 x upd -- update
-x c ip router -- you should use it if there's no open ports or if there's no vulns.
+x z [username] -- user switcher
+
+##Anti-Forensics
+x rlhost --removes logs on the local host
+x rlaserver -- corrupt aserver's system.log
+x rl [ip_address] [port] [user] [password] -- corrupt Logs/remove logs = rl
+x rlssh [ip_address] [port] [user] [password] -- connect & corrupt Logs
 
 ---
 #Attack Flow
