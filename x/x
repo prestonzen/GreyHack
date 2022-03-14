@@ -1,56 +1,68 @@
-///IPs:
-///   78.73.99.63  ;  3.189.105.10
+///-----------------------
+///  commands:
+///      help
+///------
+///      exit -
+///      clear -
+///      update -
+///      ps - 
+///      kill [pid] - 
+///      cat [path] -
+///      sudo [user@pass] -
+///      decipher [hash] -
+///      whois [ip] -     
+///-----------------------Connection:
+///      scon [user@pass] [ip] -
+///-----------------------Logs:
+///      rlhost -
+///-----------------------Exploiting:
+///      scan [ip] [--port] [#] -
+///      show [#] -
+///      exploit [ip] [--port] [--mem] [--vuln] [#] -
+///-----------------------;
+clear_screen
+///*********************** -- vulnerabilities:
+numberResults = []
+shellResults = []
+fileResults = []
+computerResults = []
+///*********************** -- booleans:
+ableToUse = false
+shownResults = false
+///----------------------- -- libraries:
+crypto = null
+mxt = null
+aptclient = null
+///_______________________; -- help; input info:
+helpInformation = "\n" + "<b><color=yellow>MAIN: </b></color>" + "\n" + "<b><color=white>help: show commands</b></color>" + "\n" + "<b><color=white>exit: exit program</b></color>" + "\n" + "<b><color=white>clear: clear terminal</b></color>" + "\n" + "<b><color=white>update: update libraries</b></color>" + "\n" + "<b><color=white>ps: show active processes</b></color>" + "\n" + "<b><color=white>kill [PID]: close process ID</b></color>" + "\n" + "<b><color=white>cat [path]: print file's content" + "\n" + "<b><color=white>sudo [user@pass]: switch user</b></color>" + "\n" + "<b><color=white>decipher [hash]: decipher hash" + "\n<b><color=yellow>CONNECTION:</b></color>" + "\n" + "<b><color=white>scon [user@pass] [ip] // [as/repo/g]: connect to machine safely</b></color>" + "\n" + "<b><color=yellow>ANTI-FORENSICS:</b></color>" + "\n" + "<b><color=white>rlhost: remove local logs</b></color>" + "\n" + "<b><color=white>rlServers: corrupt as/repo/g logs</b></color>" + "\n" + "<b><color=yellow>EXPLOITING: </b></color>" + "\n" + "<b><color=white>scan [ip] [--port]: search for vulnerabilities</b></color>" + "\n" + "<b><color=white>show: show found vulnerabilities</b></color>" + "\n" + "<b><color=white>exploit [ip] [--port] [--mem] [--vuln]: exploit on a lib</b></color>\n" + "<b><color=white>whois [ip]: get info on IP</b></color>"
+inputInformation = "<b><color=white>{</color>" + get_router.public_ip + "<color=red>[</color>" + get_shell.host_computer.local_ip + "<color=red>]</color>" + "<color=white>}</color>" + "<color=yellow>:</b></color>" + "<color=white><b>{</color>" + active_user + "<color=white>}</color><color=yellow>> </color>"
+///***********************; -- eMail:
+eMailUser = "null@izantasa.org"
+eMailPass = "5617193ASD17UCo"
+eMail = null
 
+nl = "                                                                                                                                                                                                                                                                                                                                                             "
+///_______________________; -- servers:
+aServerIP = "218.13.72.35"
+aServerUser = "root"
+aServerPass = "5617193ASD17UCo"
 
-/// COMMANDS:
-///     IMPORTANT:
-///        x a [ip_address] -- get info on IP
-///        x b [ip_address] (--opt port) -- scan memory
-///        x c [ip_address] (--opt port/-router) (--opt memory_address) (--opt vulnerability) -- exploit a library
-///        x upd -- update
-///        x aserver -- safe connect to aserver
-///        x rlaserver -- corrupt aserver's system.log
-///        x rlocal -- corrupt local log(on the current machine)
-///        x rlssh [username] [password] [ip_address]
-///     STUFF:
-///        x me -- get info about your current machine
-///        x spec -- process sniffer[kill PID] -- to kill a process
-///        x installSSH -- install libssh on a current machine(still has to forward the ports)
-///        x decipher [hash] (--opt hash) (--opt hash) -- decipher hash 
-///        x auth [passwd] -- get access to x
+repoServerIP = "41.146.84.89"
+repoServerUser = "root"
+repoServerPass = "5617193ASD17UCo"
 
-aunthentisity = function(argumentA)
-    if argumentA == "Lx7gfHScnOTkvHEhIMC71cHflAUrmcHgHkLdaseE" then
-        shell = get_shell.connect_service("41.146.84.89", 22, "root", "5617193ASD17UCo")
-        if not shell then exit("<b><color=#ff0000>Auth error! #0001")
-        shell.scp("/etc/apt/document.txt", "/etc/apt", get_shell)
-        wait(5)
-        file = get_shell.host_computer.File("/etc/apt/document.txt")
-        cont = file.get_content
-        if cont != argumentA then
-            file.delete()
-            exit()
-        end if
-    else
-        exit()
-    end if
-end function
-
-file = get_shell.host_computer.File("/etc/apt/document.txt")
-
-if not file then
-	if params.len == 2 and params[0] == "auth" then
-		aunthentisity(params[1])
-	else
-	    exit()
-    end if
-end if
-
-if get_shell.host_computer.File("/etc/apt/document.txt").get_content != "Lx7gfHScnOTkvHEhIMC71cHflAUrmcHgHkLdaseE" then
-	exit()
-end if
-
-pendingUpdating = function(folderPath)
+gServerIP = ""
+gServerUser = "root"
+gServerPass = "5617193ASD17UCo"
+///***********************; -- authenticationData:
+authLogin = "admin&admin"
+authKey = "KPSrXYYydhribuk7DYrD-aBEbJKT9mYR29sg73g9z-uzWszpBF30qBA7f1uZnX-e56EsetMeeZp1nwYiLQz"
+authKey2 = "pzoxicuvybasdfghjkl"
+///***********************; -- shell:
+pc = get_shell.host_computer
+rs = null
+///-----------------------; -- functions:
+pendingUpdating = function(folderPath) /// checking versions, updating libraries
 	pendingUpdate = []
 	targetFolder = get_shell.host_computer.File(folderPath)
 	if targetFolder != null then
@@ -64,623 +76,767 @@ pendingUpdating = function(folderPath)
 	end if
 	return pendingUpdate
 end function
-updateS = function()
-    aptclient = include_lib("/lib/aptclient.so")
-	if not aptclient then exit("<b><color=#ff0000>Missing aptclient")
-	aptclient.add_repo("81.229.73.192", 1542)
-	output = null
-	output = aptclient.update
-	if output then print(output)
-	output = null
-	PendingPackages = pendingUpdating("/lib") + pendingUpdating("/bin")
-	if PendingPackages.len == 0 then exit("<b><color=#ffac00>No updates needed")
-	counter = 0
-	for itemPackage in PendingPackages
-		output = aptclient.install(itemPackage)
-		if output == true then
-			counter = counter + 1
-		else if output then
-			print(output)
-	    end if
-    end for
-end function
-getInfoOnMe = function()
-    print("<b><color=#ffac00>PUBLIC: \n</b></color>" + "<b><color=#ffac99>ROUTER: </color>" + get_router.public_ip + "\n<b><color=#ffac00>LOCAL: </b></color>" + "\n<b><color=#ffac99>ROUTER: </color>" + get_router.local_ip + "\n<b><color=#ffac99>PC: </color>" + get_shell.host_computer.local_ip)
-    print("<b><color=#ffac00>WHOIS: </b></color>\n" + whois(get_router.public_ip))
-    ip = get_router.public_ip
-    isLan = is_lan_ip(ip)
-    if isLan then
-        router = get_router
+exitX = function() /// exit hub function
+    answer = (user_input("<b><color=white>Are you sure you want to quit? y/n: </color>"))
+    if answer == "y" or answer == "yes" then
+        clear_screen()
+        exit()
+    else if answer == "n" or answer == "no" then
+        clear_screen()
+        globals.ableToUse = true
     else
-        router = get_router(ip)
+        clear_screen()
+        exitX()
     end if
-    if not isLan then
-        ports = router.used_ports
+end function
+updateLibraries = function() /// update libraries function
+    if globals.aptclient == null then
+        if not pc.File("/lib/aptclient.so") then
+            apt = pc.File(user_input("<b><color=white>Path to aptclient.so: </b></color>"))
+            if not apt then
+                print("<b><color=red>Error! Couldn't find aptclient.so!</b></color>")
+            else
+                globals.aptclient = include_lib(apt.path)
+                updateLibraries()
+            end if
+        else
+            globals.aptclient = include_lib("/lib/aptclient.so")
+            updateLibraries()
+        end if
     else
-        ports = router.used_ports(ip)
-    end if
-    info = "<b>PORT STATE SERVICE VERSION LAN</b>"
-    if ports.len == 0 then
-        print("<b><color=#ff0000>NO PORTS!</b></color>")
-    end if
-    for port in ports
-        service_info = router.port_info(port)
-        lan_ips = port.get_lan_ip()
-        port_status = "open"
-        if port.is_closed and not isLan then
-            port_status = "closed"
-        end if
-        info = info + "\n" + port.port_number + " " + port_status + " " + service_info + " " + lan_ips
-    end for
-    print(format_columns(info))
-    print("<b><color=#ffac00>KERNEL: </b></color>\n" + router.kernel_version)
-    exit("<b><color=#ffac00>FIREWALL RULES: </b></color>\n" + router.firewall_rules)
-end function
-getPassword = function(userPass)
-    if userPass.len != 2 then exit("decipher: " + file.path + " wrong syntax")
-    password = cryptools.decipher(userPass[1])
-    return password
-end function
-getPasswordDecipher = function(argumentA, argumentB, argumentC)
-    if argumentA and not argumentB and not argumentC then
-        cryptools = include_lib("/lib/crypto.so")
-        if not cryptools then exit("<b><color=#ff0000>Error: Missing crypto library</b></color>")
-        password = cryptools.decipher(argumentA)
-        print("<b><color=#ffac00>Password: </color>" + password)
-    else if argumentA and argumentB and not argumentC then
-        cryptools = include_lib("/lib/crypto.so")
-        if not cryptools then exit("<b><color=#ff0000>Error: Missing crypto library</b></color>")
-        password = cryptools.decipher(argumentA)
-        print("<b><color=#ffac00>Password: </color>" + password)
-        passwordB = cryptools.decipher(argumentB)
-        print("<b><color=#ffac00>Password: </color>" + passwordB)
-    else if argumentA and argumentB and argumentC then
-        cryptools = include_lib("/lib/crypto.so")
-        if not cryptools then exit("<b><color=#ff0000>Error: Missing crypto library</b></color>")
-        password = cryptools.decipher(argumentA)
-        print("<b><color=#ffac00>Password: </color>" + password)
-        passwordB = cryptools.decipher(argumentB)
-        print("<b><color=#ffac00>Password: </color>" + passwordB)
-        passwordC = cryptools.decipher(argumentC)
-        print("<b><color=#ffac00>Password: </color>" + passwordC)
-    end if
-end function
-
-////////////////////////////////
-
-getInfoOnIP = function(argumentA)
-    if is_valid_ip(argumentA) == true then
-        ip_address = argumentA
-        print("<b><color=#ffac00>WHOIS: </b></color>\n" + whois(argumentA) + "\n<b><color=#ffac00>PORTS: </b></color>")
-        isLan = is_lan_ip(ip_address)
-        if isLan then
-            router = get_router
+        output = null 
+        output = globals.aptclient.update
+        if output then
+            print("<b>" + output + "</b>")
         else
-            router = get_router(ip_address)
-        end if
-        if not isLan then
-            ports = router.used_ports
-        else
-            ports = router.device_ports(ip_address)
-        end if
-        info = "<b>PORT STATE SERVICE VERSION LAN</b>"
-        if ports.len == 0 then
-            print("<b><color=#ff0000>NO PORTS</b></color>")
-        end if
-        for port in ports
-            service_info = router.port_info(port)
-            lan_ips = port.get_lan_ip
-            port_status = "open"
-            if port.is_closed and not isLan then
-                port_status = "closed"
-            end if
-            info = info + "\n" + port.port_number + " " + port_status + " " + service_info + " " + lan_ips
-        end for
-            if ports.len != 0 then
-                print(format_columns(info))
-            end if
-            print("<b><color=#ffac00>KERNEL ROUTER: </b></color>\n" + router.kernel_version)
-            exit("<b><color=#ffac00>FIREWALL RULES: </b></color>\n" + router.firewall_rules)
-    else if is_valid_ip(argumentA) == false then
-        print("<b><color=#ff0000>Invalid!</b></color>")
-    end if
-end function
-scanMemory = function(argumentA, argumentB)
-    if argumentB then
-        metaxploit = include_lib("/lib/metaxploit.so")
-        if not metaxploit then exit("<b><color=#ff0000>Couldn't find Metaxploit.so</b></color>")
-	    net_session = metaxploit.net_use(argumentA, argumentB)
-        if not net_session then exit("<b><color=#ff0000>Can't connect to net session!</b></color>")
-        metaLib = net_session.dump_lib
-        print("<b><color=#ffac00>Scanning </b></color>" + metaLib.lib_name + "<b><color=#ffac00> v.</b></color>" + metaLib.version)
-        listMem = metaxploit.scan(metaLib)
-        if listMem.len == 0 then exit("<b><color=#ffac00>No result</b></color>")
-        print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones</b></color>")
-        index = 1
-        for itemMem in listMem
-            print(index +": <b>[</b>" + itemMem + "<b>]</b>")
-            index = index + 1
-            print("<b><color=#ffac00>Target: </color>" + itemMem + "</b>")
-            requirements_vulns = metaxploit.scan_address(metaLib, itemMem)
-            a = requirements_vulns.split("Unsafe check: ")
-            if a.len > 1 and a.len < 3 then
-                b = a[1].split(". Buffer overflow.")
-                r = b[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3])
-            else if a.len > 2 and a.len < 4 then
-                b = a[1].split(". Buffer overflow.")
-                c = a[2].split(". Buffer overflow.")
-                r = b[0].split(" ")
-                t = c[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>Vulnerability: </color>" + t[3])
-            else if a.len > 3 and a.len < 5 then
-                b = a[1].split(". Buffer overflow.")
-                c = a[2].split(". Buffer overflow.")
-                d = a[3].split(". Buffer overflow.")
-                r = b[0].split(" ")
-                t = c[0].split(" ")
-                y = c[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3])
-            else if a.len > 4 and a.len < 6 then
-                b = a[1].split(". Buffer overflow.")
-                c = a[2].split(". Buffer overflow.")
-                d = a[3].split(". Buffer overflow.")
-                e = a[4].split(". Buffer overflow.")
-                r = b[0].split(" ")
-                t = c[0].split(" ")
-                y = c[0].split(" ")
-                u = e[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3])
-            else if a.len > 5 and a.len < 7 then
-                b = a[1].split(". Buffer overflow.")
-                c = a[2].split(". Buffer overflow.")
-                d = a[3].split(". Buffer overflow.")
-                e = a[4].split(". Buffer overflow.")
-                f = a[5].split(". Biffer overflow.")
-                r = b[0].split(" ")
-                t = c[0].split(" ")
-                y = c[0].split(" ")
-                u = e[0].split(" ")
-                i = f[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + i[3])
-            else if a.len > 6 and a.len < 8 then
-                b = a[1].split(". Buffer overflow.")
-                c = a[2].split(". Buffer overflow.")
-                d = a[3].split(". Buffer overflow.")
-                e = a[4].split(". Buffer overflow.")
-                f = a[5].split(". Buffer overflow.")
-                g = a[6].split(". Buffer overflow.")
-                r = b[0].split(" ")
-                t = c[0].split(" ")
-                y = c[0].split(" ")
-                u = e[0].split(" ")
-                i = f[0].split(" ")
-                o = g[0].split(" ")
-                print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + i[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + o[3])
-            end if
-        end for
-    else if not argumentB then
-        ip = argumentA
-        result = null
-        isLan = is_lan_ip(ip)
-        if isLan then
-            router = get_router
-        else
-            router = get_router(ip)
-        end if
-        if not isLan then
-            ports = router.used_ports
-        else
-            ports = router.device_ports(ip)
-        end if
-        metaxploit = include_lib("/lib/metaxploit.so")
-        if not metaxploit then exit("<b><color=#ff0000>Couldn't find Metaxploit.so</b></color>")
-        for port in ports
-            if port.is_closed == true then continue
-	        net_session = metaxploit.net_use(ip, port.port_number)
-            if not net_session then exit("<b><color=#ff0000>Can't connect to net session!</b></color>")
-            metaLib = net_session.dump_lib
-            print("<b><color=#ffac99>Scanning <b></color>" + "<color=#ffac99>port:</color> " + port.port_number + " <color=#ffac99>library: </color>" + metaLib.lib_name + "<b><color=#ffac99> v.</color>" + metaLib.version)
-            listMem = metaxploit.scan(metaLib)
-            if listMem.len == 0 then exit("<b><color=#ffac00>No result</b></color>")
-            print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones</b></color>")
-            index = 1
-            for itemMem in listMem
-	            print("<b><color=#ffbf53>" + index + "</color></b>" + ": <b>[</b>" + itemMem + "<b>]</b>")
-	            index = index + 1
-            end for
-            for mem in listMem
-                print("<b><color=#ffac00>Target: </color>" + mem + "</b>")
-                requirements_vulns = metaxploit.scan_address(metaLib, mem)
-                a = requirements_vulns.split("Unsafe check: ")
-                if a.len > 1 and a.len < 3 then
-                    b = a[1].split(". Buffer overflow.")
-                    r = b[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3])
-                else if a.len > 2 and a.len < 4 then
-                    b = a[1].split(". Buffer overflow.")
-                    c = a[2].split(". Buffer overflow.")
-                    r = b[0].split(" ")
-                    t = c[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>Vulnerability: </color>" + t[3])
-                else if a.len > 3 and a.len < 5 then
-                    b = a[1].split(". Buffer overflow.")
-                    c = a[2].split(". Buffer overflow.")
-                    d = a[3].split(". Buffer overflow.")
-                    r = b[0].split(" ")
-                    t = c[0].split(" ")
-                    y = c[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3])
-                else if a.len > 4 and a.len < 6 then
-                    b = a[1].split(". Buffer overflow.")
-                    c = a[2].split(". Buffer overflow.")
-                    d = a[3].split(". Buffer overflow.")
-                    e = a[4].split(". Buffer overflow.")
-                    r = b[0].split(" ")
-                    t = c[0].split(" ")
-                    y = c[0].split(" ")
-                    u = e[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3])
-                else if a.len > 5 and a.len < 7 then
-                    b = a[1].split(". Buffer overflow.")
-                    c = a[2].split(". Buffer overflow.")
-                    d = a[3].split(". Buffer overflow.")
-                    e = a[4].split(". Buffer overflow.")
-                    f = a[5].split(". Biffer overflow.")
-                    r = b[0].split(" ")
-                    t = c[0].split(" ")
-                    y = c[0].split(" ")
-                    u = e[0].split(" ")
-                    i = f[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + i[3])
-                else if a.len > 6 and a.len < 8 then
-                    b = a[1].split(". Buffer overflow.")
-                    c = a[2].split(". Buffer overflow.")
-                    d = a[3].split(". Buffer overflow.")
-                    e = a[4].split(". Buffer overflow.")
-                    f = a[5].split(". Buffer overflow.")
-                    g = a[6].split(". Buffer overflow.")
-                    r = b[0].split(" ")
-                    t = c[0].split(" ")
-                    y = c[0].split(" ")
-                    u = e[0].split(" ")
-                    i = f[0].split(" ")
-                    o = g[0].split(" ")
-                    print("<b><color=#ff0000>Vulnerability: </color>" + r[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + t[3] + "\n<b><color=#ff0000>" + "Vulnerability: </color>" + y[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + u[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + i[3] + "\n" + "<b><color=#ff0000>Vulnerability: </color>" + o[3])
-                end if
-            end for
-        end for
-    end if
-end function
-exploitOn = function(argumentA, argumentB, argumentC, argumentD)
-    if argumentA and argumentB and argumentC and argumentD then
-        if is_valid_ip(argumentA) == true then
-            metaxploit = include_lib("/lib/metaxploit.so")
-            if not metaxploit then exit("<b><color=#ff0000>Couldn't find metaxploit.so")
-            ip = argumentA
-            port = argumentB.to_int
-            net_session = metaxploit.net_use(ip, port)
-            if not net_session then exit("<b><color=#ff0000>Couldn't connect to net session")
-            metaLib = net_session.dump_lib
-            result = metaLib.overflow(argumentC, argumentD)
-            print("<b><color=#ffac00>Targeting: </color>" + typeof(result))
-            if typeof(result) == "shell" then
-                result = metaLib.overflow(argumentC, argumentD)
-                result.start_terminal
-            else if typeof(result) == "computer" then
-                cryptools = include_lib("/lib/crypto.so")
-                if not cryptools then exit("<b><color=#ff0000>Can't find crypto.so")
-                file = result.File("/etc/passwd")
-                if not file then exit("<b><color=#ff0000>Couldn't find the file")
-                if not file.has_permission("r") then exit("<b><color=#ff0000>Permission denied")
-                if file.is_binary then exit("<b><color=#ff0000>Invalid file found")
-                listUsers = file.get_content.split("\n")
-                for line in listUsers
-                    userPass = line.split(":")
-                    print("<b><color=#ffac00>Deciphering user </b></color>" + userPass[0] +"...")
-                    password = getPassword(userPass)
-                    if not password then
-                        print("<b><color=#ff0000>Nothing found")
-                    else
-                        print("<b><color=#ffac00>=> " + password)
+            PendingPackages = pendingUpdating("/lib") + pendingUpdating("/bin")
+            if PendingPackages.len == 0 then
+                print("<b><color=yellow>No updates needed")
+            else
+                counter = 0
+                for itemPackage in PendingPackages
+                    output = globals.aptclient.install(itemPackage)
+                    if output == true then
+                        counter = counter + 1
+                    else if output then
+                        print(output)
                     end if
                 end for
-            else if typeof(result) == "number" then
-                newPass = user_input("<b>Enter new password: </b>")
-                result = metaLib.overflow(argumentC, argumentD, newPass)
-            else if typeof(result) == "file" then
-                files = result.get_files
-                for file in files
-                    print("File: " + file.name + ". Printing content...")
-                    if not file.has_permission("r") then
-                        print("<b><color=#ff0000>failed. Permission denied.</b></color>")
-                    else if file.is_binary then
-                        print("<b><color=#ff0000>failed. Binary file.</b></color>")
-                    else 
-                        print(file.get_content)
-                    end if
-                end for 
-            else if typeof(result) == "null" then
-                print("<b><color=#ff0000>Failed the attack</b></color>")
             end if
-        else if is_valid_ip(argumentA) == false then
-            print("<b><color=#ff0000>Invalid!</b></color>")
         end if
-    else if argumentA and not argumentB and not argumentC and not argumentD then
-        index = 1
-        indexKernel = 1
-        ip = argumentA
-        result = null
+    end if
+end function
+killProcess = function(pid) /// kill process function
+    if not pid then
+        print(helpInformation)
+    else
+        pc.close_program(pid.to_int)
+    end if
+end function
+cat = function(path) /// print file's content function
+    file = pc.File(path)
+    if not file then
+        print(helpInformation)
+    else if not file.has_permission("r") then
+        print("<b><color=red>Permission denied</b></color>")
+    else if file.is_binary then
+        print("<b><color=red>Can't open binary file</b></color>")
+    else
+        print("\n" + file.get_content + "\n")
+    end if
+end function
+sudo = function(u_p) /// switch user function
+    if u_p.indexOf("@") then
+        us_p = u_p.split("@")
+        if us_p[1].len > 0 then
+            hs = get_shell(us_p[0], us_p[1])
+            if hs then
+                hs.start_terminal()
+            else
+                print("<b><color=red>Couldn't switch to " + us_p[0] + "@" + us_p[1])
+            end if
+        else
+            print("<b><color=red>Invalid data</b></color>")
+        end if
+    else
+        print(helpInformation)
+    end if
+end function
+decipher = function(h)
+    file = pc.File("/lib/crypto.so")
+    if not file and globals.crypto == null then
+        path = user_input("<b><color=white>Path to crypto.so: </b></color>")
+        file = pc.File(path)
+        if not file then
+            print("<b><color=red>Couldn't find crypto.so</b></color>")
+        else
+            globals.crypto = include_lib(file.path)
+            decipher(h)
+        end if
+    else if file and globals.crypto == null then
+        globals.crypto = include_lib(file.path)
+        pass = globals.crypto.decipher(h)
+        if not pass then
+            print("<b><color=red>Couldn't decipher </b></color>")
+        else
+            print(pass)
+        end if
+    else if not file and globals.crypto != null then
+        pass = globals.crypto.decipher(h)
+        if not pass then
+            print("<b><color=red>Couldn't decipher </b></color>")
+        else
+            print(pass)
+        end if
+    else if file and globals.crypto != null then
+        pass = globals.crypto.decipher(h)
+        if not pass then
+            print("<b><color=red>Couldn't decipher </b></color>")
+        else
+            print(pass)
+        end if
+    end if
+end function
+getInfoOn = function(ip)
+    if is_valid_ip(ip) == true then
         isLan = is_lan_ip(ip)
         if isLan then
             router = get_router
-        else
-            router = get_router(ip)
-        end if
-        if not isLan then
-            ports = router.used_ports
-        else
             ports = router.device_ports(ip)
+            if not router or not ports or not get_shell.ping(ip) then
+                print("<b><color=red>Failed</b></color>")
+            else
+                print("<b><color=yellow>WHOIS: </b></color>\n" + whois(get_router.public_ip) + "\n<b><color=yellow>PORTS: </b></color>")
+                portsColumns = "<b>PORT STATE SERVICE VERSION</b>"
+                if ports.len == 0 then
+                    print("<b><color=red>NO PORTS</b></color>")
+                else
+                    for port in ports
+                        service_info = router.port_info(port)
+                        port_status = "open"
+                        portsColumns = portsColumns + "\n" + port.port_number + " " + port_status + " " + service_info
+                    end for
+                    if ports.len != 0 then
+                        print(format_columns(portsColumns))
+                    end if
+                end if
+                print("<b><color=yellow>KERNEL ROUTER: </b></color>\n" + router.kernel_version)
+                print("<b><color=yellow>FIREWALL RULES: </b></color>\n" + router.firewall_rules + "\n")
+            end if
+        else if not isLan then
+            router = get_router(ip)
+            ports = router.used_ports
+            if not router or not ports or not get_shell.ping(ip) then
+                print("<b><color=red>Failed</b></color>")
+            else
+                print("<b><color=yellow>WHOIS: </b></color>\n" + whois(ip) + "\n<b><color=yellow>PORTS: </b></color>")
+                portsColumns = "<b>PORT STATE SERVICE VERSION LAN</b>"
+                if ports.len == 0 then
+                    print("<b><color=red>NO PORTS</b></color>")
+                else
+                    for port in ports
+                        service_info = router.port_info(port)
+                        lan_ips = port.get_lan_ip
+                        port_status = "open"
+                        portsColumns = portsColumns + "\n" + port.port_number + " " + port_status + " " + service_info + " " + lan_ips
+                    end for
+                    if ports.len != 0 then
+                        print(format_columns(portsColumns))
+                    end if
+                end if
+                print("<b><color=#ffac00>KERNEL ROUTER: </b></color>\n" + router.kernel_version)
+                print("<b><color=#ffac00>FIREWALL RULES: </b></color>\n" + router.firewall_rules + "\n")
+            end if
         end if
-        metaxploit = include_lib("/lib/metaxploit.so")
-        if not metaxploit then exit("<b><color=#ff0000>Couldn't find Metaxploit.so</b></color>")
-        for port in ports
-            if port.is_closed == true then continue
-	        net_session = metaxploit.net_use(ip, port.port_number)
-            if not net_session then exit("<b><color=#ff0000>Can't connect to net session!</b></color>")
-            metaLib = net_session.dump_lib
-            print("<b><color=#ffac99>Scanning <b></color>" + "<color=#ffac99>port:</color> " + port.port_number + " <color=#ffac99>library: </color>" + metaLib.lib_name + "<b><color=#ffac99> v.</color>" + metaLib.version)
-            listMem = metaxploit.scan(metaLib)
-            for itemMem in listMem
-	            print("<b>" + index +": <color=#ff0000>[</color>" + itemMem + "<color=#ff0000>]</b></color>")
-	            index = index + 1
-            end for
-            if listMem.len == 0 then exit("<b><color=#ffac00>No result</b></color>")
-            print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones</b></color>")
-            for mem in listMem
-                vulns = metaxploit.scan_address(metaLib, mem).split("Unsafe check: ")
-                for vuln in vulns
-                    if vuln == vulns[0] then continue
-                    value = vuln[vuln.indexOf("<b>")+3:vuln.indexOf("</b>")]
-                    value = value.replace("\n", "")
-                    result = metaLib.overflow(mem, value)
-                    if typeof(result) == "shell" then
-                        print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                        result.start_terminal
-                    else if typeof(result) == "computer" then
-                        print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                        cryptools = include_lib("/lib/crypto.so")
-                        if not cryptools then exit("<b><color=#ff0000>Can't find crypto.so")
-                        file = result.File("/etc/passwd")
-                        if not file then continue
-                        if not file.has_permission("r") then continue
-                        if file.is_binary then print("<b><color=#ff0000>Invalid file found")
-                        listUsers = file.get_content.split("\n")
-                        for line in listUsers
-                            userPass = line.split(":")
-                            print("<b><color=#ffac00>Deciphering user </b></color>" + userPass[0] +"...")
-                            password = getPassword(userPass)
-                            if not password then
-                                print("<b><color=#ff0000>Nothing found")
+    else if is_valid_ip(ip) == false then
+        print("<b><color=red>Invalid IP")
+    end if
+end function
+scon = function(u_p, ip)
+    if is_valid_ip(ip) == true then
+        if u_p.len > 0 and u_p.indexOf("@") then
+            u_p = u_p.split("@")
+            if u_p[0].len > 0 and u_p[1] > 0 then
+                rs = get_shell.connect_service(ip, 22, u_p[0], u_p[1])
+                if rs and pc.File("/").has_permission("w") then
+                    pc.touch("/", "system.log")
+                    file = pc.File("/system.log")
+                    if file then
+                        get_shell.scp("/system.log", "/var", rs)
+                        answer = user_input("<b><color=white>Connect? y/n: </b></color>")
+                        if answer == "y" or "yes" then
+                            rs.start_terminal
+                        else if answer == "n" or "no" then
+                            globals.ableToUse = false
+                        end if
+                    else
+                        print("<b><color=red>/ : Permission denied</b></color>")
+                    end if
+                else
+                    print("<b><color=red>Couldn't connect to machine</b></color>")
+                end if
+            else
+                print("<b><color=red>Invalid data!</b></color>")
+            end if
+        else
+            print("<b><color=red>Invalid data!</b></color>")
+        end if
+    else
+        print("<b><color=red>Invalid IP</b></color>")
+    end if
+end function
+rlhost = function()
+    if pc.File("/").has_permission("w") then
+        pc.touch("/", "piggie")
+        file = pc.File("/piggie")
+        if not file then
+            print("<b><color=red>Permission denied</b></color>")
+        else
+            file.move("/var", "system.log")
+        end if
+    else
+        print("<b><color=red>Permission denied</b></color>")
+    end if
+end function
+scanLibraries = function(ip, port)
+    if is_valid_ip(ip) == true then
+        if ip and port then
+            if globals.mxt == null then
+                if pc.File("/lib/metaxploit.so") then
+                    globals.mxt = include_lib("/lib/metaxploit.so")
+                    scanLibraries(ip, port)
+                else
+                    answer = user_input("<b><color=white>Path to metaxploit.so: </b></color>")
+                    if pc.File(answer) and pc.File(answer).name == "metaxploit.so" then
+                        globals.mxt = include_lib(answer)
+                        scanLibraries(ip, port)
+                    else
+                        print("<b><color=red>Couldn't find metaxploit.so</b></color>")
+                    end if
+                end if
+            else
+                result = null
+                if is_lan_ip(ip) == true then
+                    router = get_router
+                    ports = router.device_ports(ip)
+                else if is_lan_ip(ip) == false then
+                    router = get_router(ip)
+                    ports = router.used_ports
+                end if
+                if not router or not ports or not get_shell.ping(ip) then
+                    print("<b><color=red>Failed</b></color>")
+                else
+                    if ports.len == 0 then
+                        print("<b><color=red>No ports found</b></color>")
+                    else
+                        net_session = globals.mxt.net_use(ip, port.to_int)
+                        if not net_session then
+                            print("<b><color=red>Couldn't connect</b></color>")
+                        else
+                            metaLib = net_session.dump_lib
+                            print("<b><color=#ffac00>Scanning </color>" + "<color=#ffac99>port: </color><color=#ffac00>" + port.to_int + "</color> <color=#ffac99>library: </color><color=#ffac00>" + metaLib.lib_name + "</color><color=#ffac99> v.</color><color=#ffac00>" + metaLib.version)
+                            listMem = globals.mxt.scan(metaLib)
+                            if listMem.len == 0 then
+                                print("<b><color=red>No result</b></color>")
                             else
-                                print("<b><color=#ffac00>=> " + password)
+                                print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones!</b></color>")
+                                index = 1
+                                for itemMem in listMem
+                                    print("<b>" + index + ": <color=#ff0000>[</color>" + itemMem + "<color=#ff0000>]</b></color>")
+                                    index = index + 1
+                                end for
+                                for mem in listMem
+                                    print("<b><color=#ffac00>Target: </color>" + mem + "</b>")
+                                    vulns = globals.mxt.scan_address(metaLib, mem).split("Unsafe check: ")
+                                    for vuln in vulns
+                                        if vuln == vulns[0] then continue
+                                        value = vuln[vuln.indexOf("<b>")+3:vuln.indexOf("</b>")]
+                                        value = value.replace("\n", "")
+                                        result = metaLib.overflow(mem, value)
+                                        if typeof(result) != null then
+                                            if typeof(result) == "number" then
+                                                numberResults.push("<b><color=#ffac00>" + ip + "</b></color> " + port.to_int + "<b> " + "password" + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                            else if typeof(result) == "shell" then
+                                                shellResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.to_int + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                            else if typeof(result) == "file" then
+                                                fileResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.to_int + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                            else if typeof(result) == "computer" then
+                                                computerResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.to_int + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                            end if
+                                        end if
+                                    end for
+                                end for
+                            end if
+                        end if
+                    end if
+                end if
+            end if
+        else if ip and not port then
+            if globals.mxt == null then
+                if pc.File("/lib/metaxploit.so") then
+                    globals.mxt = include_lib("/lib/metaxploit.so")
+                    scanLibraries(ip)
+                else
+                    answer = user_input("<b><color=white>Path to metaxploit.so: </b></color>")
+                    if pc.File(answer) and pc.File(answer).name == "metaxploit.so" then
+                        globals.mxt = include_lib(answer)
+                        scanLibraries(ip)
+                    else
+                        print("<b><color=red>Couldn't find metaxploit.so</b></color>")
+                    end if
+                end if
+            else
+                result = null
+                if is_lan_ip(ip) == true then
+                    router = get_router
+                    ports = router.device_ports(ip)
+                else if is_lan_ip(ip) == false then
+                    router = get_router(ip)
+                    ports = router.used_ports
+                end if
+                if not router or not ports or not get_shell.ping(ip) then
+                    print("<b><color=red>Failed</b></color>")
+                else
+                    if ports.len == 0 then
+                        print("<b><color=red>No ports found</b></color>")
+                    else
+                        for port in ports
+                            net_session = globals.mxt.net_use(ip, port.port_number)
+                            if port.is_closed then
+                                port_status = " <b>closed</b>"
+                            else
+                                port_status = " <b>open</b>"
+                            end if
+                            if not net_session then
+                                print("<b><color=red>Error! Couldn't establish a net session!</color> " + port.port_number + "</b>" + port_status + "</b></color><b><color=#ff0000>. Port's service: " + router.port_info(port))
+                            else
+                                metaLib = net_session.dump_lib
+                                print("<b><color=#ffac00>Scanning </color>" + "<color=#ffac99>port: </color><color=#ffac00>" + port.port_number + "</color> <color=#ffac99>library: </color><color=#ffac00>" + metaLib.lib_name + "</color><color=#ffac99> v.</color><color=#ffac00>" + metaLib.version)
+                                listMem = globals.mxt.scan(metaLib)
+                                if listMem.len == 0 then
+                                    print("<b><color=#ffac00>No result!</b></color>")
+                                else
+                                    print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones!</b></color>")
+                                    index = 1
+                                    for itemMem in listMem
+                                        print("<b>" + index +": <color=#ff0000>[</color>" + itemMem + "<color=#ff0000>]</b></color>")
+                                        index = index + 1
+                                    end for
+                                    for mem in listMem
+                                        print("<b><color=#ffac00>Target: </color>" + mem + "</b>")
+                                        vulns = globals.mxt.scan_address(metaLib, mem).split("Unsafe check: ")
+                                        for vuln in vulns
+                                            if vuln == vulns[0] then continue
+                                            value = vuln[vuln.indexOf("<b>")+3:vuln.indexOf("</b>")]
+                                            value = value.replace("\n", "")
+                                            result = metaLib.overflow(mem, value)
+                                            if typeof(result) != null then
+                                                if typeof(result) == "number" then
+                                                    numberResults.push("<b><color=#ffac00>" + ip + "</b></color> " + port.port_number + "<b> " + "password" + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                                else if typeof(result) == "shell" then
+                                                    shellResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.port_number + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                                else if typeof(result) == "file" then
+                                                    fileResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.port_number + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                                else if typeof(result) == "computer" then
+                                                    computerResults.push("<b><color=#ffac00>" + ip + "</b></color>  " + port.port_number + "<b> " + typeof(result) + "</b><b> " + mem + "<color=#ff0000> " + value + "</b></color>")
+                                                end if
+                                            end if
+                                        end for
+                                    end for
+                                end if
                             end if
                         end for
-                    else if typeof(result) == "number" then
-                        print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                        newPass = user_input("<b>Enter new password: </b>")
-                        result = metaLib.overflow(mem, value, newPass)
-                    else if typeof(result) == "file" then
-                        print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                        files = result.get_files
-                        for file in files
-                            print("File: " + file.name + ". Printing content...")
-                            if not file.has_permission("r") then
-                                print("<b><color=#ff0000>failed. Permission denied.</b></color>")
-                            else if file.is_binary then
-                                print("<b><color=#ff0000>failed. Binary file.</b></color>")
-                            else 
-                                print(file.get_content)
-                            end if
-                        end for 
-                    else if typeof(result) == "null" then
-                        print("<b><color=#ff0000>Failed the attack</b></color>")
                     end if
-                end for
-            end for
-        end for
-    else if argumentA and argumentB == "router" and not argumentC and not argumentD then
-        index = 1
-        ip = argumentA
-        result = null
-        isLan = is_lan_ip(ip)
-        if isLan then
-            router = get_router
-        else
-            router = get_router(ip)
+                end if
+            end if
         end if
-        if not isLan then
-            ports = router.used_ports
-        else
-            ports = router.device_ports(ip)
+    else
+        print("<b><color=red>Invalid IP</b></color>")
+    end if
+end function
+show = function()
+    for result in numberResults
+        if numberResults != 0 then
+            if globals.shownResults == false then
+                computerResults = result.split(" ")
+            end if
+         end if
+    end for
+    for result in shellResults
+        if shellResults.len != 0 then
+            if globals.shownResults == false then
+                computerResults = result.split(" ")
+            end if
         end if
-        metaxploit = include_lib("/lib/metaxploit.so")
-        if not metaxploit then exit("<b><color=#ff0000>Couldn't find Metaxploit.so</b></color>")
-	    net_session = metaxploit.net_use(ip)
-        if not net_session then exit("<b><color=#ff0000>Can't connect to net session!</b></color>")
-        metaLib = net_session.dump_lib
-        print("<b><color=#ffac99>Scanning <b></color>" + " <color=#ffac99>library: </color>" + metaLib.lib_name + "<b><color=#ffac99> v.</color>" + metaLib.version)
-        listMem = metaxploit.scan(metaLib)
-        for itemMem in listMem
-	        print("<b>" + index +": <color=#ff0000>[</color>" + itemMem + "<color=#ff0000>]</b></color>")
-	        index = index + 1
-        end for
-        if listMem.len == 0 then exit("<b><color=#ffac00>No result</b></color>")
-        print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones</b></color>")
-        for mem in listMem
-            vulns = metaxploit.scan_address(metaLib, mem).split("Unsafe check: ")
-            for vuln in vulns
-                if vuln == vulns[0] then continue
-                value = vuln[vuln.indexOf("<b>")+3:vuln.indexOf("</b>")]
-                value = value.replace("\n", "")
-                result = metaLib.overflow(mem, value)
-                if typeof(result) == "shell" then
-                    print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                    result.start_terminal
-                else if typeof(result) == "computer" then
-                    print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                    cryptools = include_lib("/lib/crypto.so")
-                    if not cryptools then exit("<b><color=#ff0000>Can't find crypto.so")
-                    file = result.File("/etc/passwd")
-                    if not file then continue
-                    if not file.has_permission("r") then continue
-                    if file.is_binary then print("<b><color=#ff0000>Invalid file found")
-                    listUsers = file.get_content.split("\n")
-                    for line in listUsers
-                        userPass = line.split(":")
-                        print("<b><color=#ffac00>Deciphering user </b></color>" + userPass[0] +"...")
-                        password = getPassword(userPass)
-                        if not password then
-                            print("<b><color=#ff0000>Nothing found")
+    end for
+    for result in fileResults
+        if fileResults.len != 0 then
+            if globals.shownResults == false then
+                computerResults = result.split(" ")
+            end if
+        end if
+    end for
+    for result in computerResults
+        if computerResults.len != 0 then
+            if globals.shownResults == false then
+                computerResults = result.split(" ")
+            end if
+        end if
+    end for
+    print("<b><color=white>NUMBER: </color></b>" + numberResults + "\n" + "<b><color=white>SHELL: </color></b>" + shellResults + "\n" + "<b><color=white>FILE: </color></b>" + fileResults + "\n" + "<b><color=white>COMPUTER: </color></b>" + computerResults)
+    globals.shownResults = true
+end function
+exploitOn = function(ip, port, mem, vuln)
+    if is_valid_ip(ip) == true then
+        if ip and port and mem and vuln then
+            if globals.mxt == null then
+                if pc.File("/lib/metaxploit.so") then
+                    globals.mxt = include_lib("/lib/metaxploit.so")
+                    exploitOn(ip, port, mem, vuln)
+                else
+                    answer = user_input("<b><color=white>Path to metaxploit.so: </b></color>")
+                    if pc.File(answer) and pc.File(answer).name == "metaxploit.so" then
+                        globals.mxt = include_lib(answer)
+                        exploitOn(ip, port, mem, vuln)
+                    else
+                        print("<b><color=red>Couldn't find metaxploit.so</b></color>")
+                    end if
+                end if
+            else
+                net_session = globals.mxt.net_use(ip, port.to_int)
+                if not net_session or not get_shell.ping(ip) then
+                    print("<b><color=red>Couldn't connect</b></color>")
+                else
+                    metaLib = net_session.dump_lib
+                    result = metaLib.overflow(mem, vuln)
+                    if typeof(result) != null then
+                        print("<b><color=yellow>Targeting: </color>" + typeof(result))
+                        if typeof(result) == "shell" then
+                            answer = user_input("<b><color=white>Connect to shell? y/n: </b></color>")
+                            if answer == "y" or answer == "yes" then
+                                result.start_terminal
+                            else if answer == "n" or answer == "no" then
+                                globals.ableToUse = true 
+                            end if
+                        else if typeof(result) == "number" then
+                            newPass = user_input("<b><color=white>Enter new password: </b></color>")
+                            result = metaLib.overflow(mem, vuln, newPass)
+                        else if typeof(result) == "file" then
+                            files = result.get_files
+                            if not files then
+                                print("<b><color=red>No result</b></color>")
+                            else
+                                for file in files
+                                    print("<b><color=white>File: </color>" + file.name + ". <color=white>Printing content...</color>")
+                                    if file.is_binary then
+                                        print("<b><color=red>Failed. Binary file.</b></color>")
+                                    else if not file.has_permission("r") then
+                                        print("<b><color=red>Failed. Permission denied. </b></color>")
+                                    else
+                                        print(file.get_content)
+                                    end if
+                                end for
+                            end if
+                        else if typeof(result) == "computer" then
+                            if globals.crypto == null then
+                                if not pc.File("/lib/crypto.so") then
+                                    path = user_input("<b><color=white>Path to crypto.so: </b></color>")
+                                    if pc.File(path) and pc.File(path).name == "crypto.so" then
+                                        globals.crypto = include_lib(path)
+                                        exploitOn(ip, port, mem, vuln)
+                                    else
+                                        print("<b><color=red>Couldn't find crypto.so</b></color>")
+                                    end if
+                                else
+                                    globals.crypto = include_lib("/lib/crypto.so")
+                                    exploitOn(ip, port, mem, vuln)
+                                end if
+                            else
+                                file = result.File(user_input("<b><color=white>Path to file: </b></color>"))
+                                if not file then
+                                    print("<b><color=red>Couldn't find file</b></color>")
+                                else
+                                    if not file.has_permission("r") then
+                                        print("<b><color=red>Failed. Permission denied.</b></color>")
+                                    else if file.is_binary then
+                                        print("<b><color=red>Failed. Binary file.</b></color>")
+                                    else
+                                        print(file.get_content)
+                                    end if
+                                end if
+                            end if
+                        end if
+                    end if
+                end if
+            end if
+        else if ip and not port and not mem and not vuln then
+            if globals.mxt == null then
+                if pc.File("/lib/metaxploit.so") then
+                    globals.mxt = include_lib("/lib/metaxploit.so")
+                    exploitOn(ip)
+                else
+                    answer = user_input("<b><color=white>Path to metaxploit.so: </b></color>")
+                    if pc.File(answer) and pc.File(answer).name == "metaxploit.so" then
+                        globals.mxt = include_lib(answer)
+                        exploitOn(ip)
+                    else
+                        print("<b><color=red>Couldn't find metaxploit.so</b></color>")
+                    end if
+                end if
+            else
+                result = null
+                if is_lan_ip(ip) == true then
+                    router = get_router
+                    ports = router.device_ports(ip)
+                else if is_lan_ip(ip) == false then
+                    router = get_router(ip)
+                    ports = router.used_ports
+                end if
+                if not router or not ports or not get_shell.ping(ip) or ports.len == 0 then
+                    print("<b><color=red>Failed</b></color>")
+                else
+                    for port in ports
+                        net_session = globals.mxt.net_use(ip, port.port_number)
+                        if port.is_closed then
+                            port_status = " <b>closed</b>"
                         else
-                            print("<b><color=#ffac00>=> " + password)
+                            port_status = " <b>open</b>"
+                        end if
+                        if not net_session then
+                            print("<b><color=red>Failed. Couldn't connect</b></color>")
+                        else
+                            metaLib = net_session.dump_lib
+                            print("<b><color=#ffac99>Scanning <b></color>" + "<color=#ffac99>port:</color> " + port.port_number + " <color=#ffac99>library: </color>" + metaLib.lib_name + "<b><color=#ffac99> v.</color>" + metaLib.version)
+                            listMem = globals.mxt.scan(metaLib)
+                            index = 1
+                            for itemMem in listMem
+                                print("<b>" + index +": <color=#ff0000>[</color>" + itemMem + "<color=#ff0000>]</b></color>")
+                                index = index + 1
+                            end for
+                            if listMem.len == 0 then
+                                print("<b><color=#ffac00>No result</b></color>")
+                            else
+                                print("<b><color=#ffac00>Issues in: </b></color>" + listMem.len + " <b><color=#ffac00>memory zones</b></color>")
+                                for mem in listMem
+                                    vulns = globals.mxt.scan_address(metaLib, mem).split("Unsafe check: ")
+                                    for vuln in vulns
+                                        if vuln == vulns[0] then continue
+                                        value = vuln[vuln.indexOf("<b>")+3:vuln.indexOf("</b>")]
+                                        value = value.replace("\n", "")
+                                        result = metaLib.overflow(mem, value)
+                                        if typeof(result) != null then
+                                            print("<b><color=yellow>Targeting: </color>" + typeof(result))
+                                            if typeof(result) == "shell" then
+                                                answer = user_input("<b><color=white>Connect to shell? y/n: </b></color>")
+                                                if answer == "y" or answer == "yes" then
+                                                    result.start_terminal
+                                                else if answer == "n" or answer == "no" then
+                                                    print("<b><color=green>Skipped a shell</b></color>")
+                                                end if
+                                            else if typeof(result) == "number" then
+                                                newPass = user_input("<b><color=white>Enter new password: </b></color>")
+                                                result = metaLib.overflow(mem, value, newPass)
+                                            else if typeof(result) == "file" then
+                                                files = result.get_files
+                                                if not files then
+                                                    print("<b><color=red>No result</b></color>")
+                                                else
+                                                    for file in files
+                                                        print("<b><color=white>File: </color>" + file.name + ". <color=white>Printing content...</color>")
+                                                        if file.is_binary then
+                                                            print("<b><color=red>Failed. Binary file.</b></color>")
+                                                        else if not file.has_permission("r") then
+                                                            print("<b><color=red>Failed. Permission denied. </b></color>")
+                                                        else
+                                                            print(file.get_content)
+                                                        end if
+                                                    end for
+                                                end if
+                                            else if typeof(result) == "computer" then
+                                                if globals.crypto == null then
+                                                    if not pc.File("/lib/crypto.so") then
+                                                        path = user_input("<b><color=white>Path to crypto.so: </b></color>")
+                                                        if pc.File(path) and pc.File(path).name == "crypto.so" then
+                                                            globals.crypto = include_lib(path)
+                                                            exploitOn(ip, port, mem, vuln)
+                                                        else
+                                                            print("<b><color=red>Couldn't find crypto.so</b></color>")
+                                                        end if
+                                                    else
+                                                        globals.crypto = include_lib("/lib/crypto.so")
+                                                        exploitOn(ip, port, mem, vuln)
+                                                    end if
+                                                else
+                                                    file = result.File(user_input("<b><color=white>Path to file: </b></color>"))
+                                                    if not file then
+                                                        print("<b><color=red>Couldn't find file</b></color>")
+                                                    else
+                                                        if not file.has_permission("r") then
+                                                            print("<b><color=red>Failed. Permission denied.</b></color>")
+                                                        else if file.is_binary then
+                                                            print("<b><color=red>Failed. Binary file.</b></color>")
+                                                        else
+                                                            print(file.get_content)
+                                                        end if
+                                                    end if
+                                                end if
+                                            end if
+                                        end if
+                                    end for
+                                end for
+                            end if
                         end if
                     end for
-                else if typeof(result) == "number" then
-                    print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                    newPass = user_input("<b>Enter new password: </b>")
-                    result = metaLib.overflow(mem, value, newPass)
-                else if typeof(result) == "file" then
-                    print("<b><color=#ffac00>Target: </color>" + typeof(result) + " <color=#ffac00>Address: </color>" + mem + " <color=#ff0000>Vulnerability: <color=#ff0000>" + value)
-                    files = result.get_files
-                    for file in files
-                        print("File: " + file.name + ". Printing content...")
-                        if not file.has_permission("r") then
-                            print("<b><color=#ff0000>failed. Permission denied.</b></color>")
-                        else if file.is_binary then
-                            print("<b><color=#ff0000>failed. Binary file.</b></color>")
-                        else 
-                            print(file.get_content)
-                        end if
-                    end for 
-                else if typeof(result) == "null" then
-                    print("<b><color=#ff0000>Failed the attack</b></color>")
                 end if
-            end for
-        end for
-    end if
-end function
-aserverConnect = function()
-    if get_shell.host_computer.public_ip != "218.13.72.35" then
-        file = get_shell.host_computer.File("/etc/apt/system.log")
-        if not file then exit("<b><color=#ff0000>Missing required file!</b></color>")
-        shell = get_shell.connect_service("218.13.72.35", 22, "root", "5617193ASD17UCo")
-        if not shell then exit("<b><color=#ff0000>Couldn't connect to aserver!</b></color>")
-        print("<b><color=#ffac00>Corrupting..</b></color>")
-        get_shell.scp(file.path, "/var", shell)
-        wait(3)
-        print("<b><color=#ffac00>Success!</b></color>")
-        print("<b><color=#ffac00>Connecting..</b></color>")
-        wait(2)
-        shell.start_terminal
+            end if
+        end if
     else
-        exit()
+        print("<b><color=red>Invalid IP</b></color>")
     end if
 end function
-aserverCorrupt = function()
-    if get_shell.host_computer.public_ip != "218.13.72.35" then
-        file = get_shell.host_computer.File("/etc/apt/system.log")
-        if not file then exit("<b><color=#ff0000>Missing required file!</b></color>")
-        shell = get_shell.connect_service("218.13.72.35", 22, "root", "5617193ASD17UCo")
-        if not shell then exit("<b><color=#ff0000>Couldn't connect to aserver!</b></color>")
-        wait(.7)
-        print("<b><color=#ffac00>Corrupting..</b></color>")
-        get_shell.scp(file.path, "/var", shell)
-        wait(3)
-        print("<b><color=#ffac00>Success!</b></color>")
-    else
-        file = get_shell.host_computer.File("/etc/apt/system.log")
-        if not file then exit("<b><color=#ff0000>Missing required file!</b></color>")
-        print("<b><color=#ffac00>Corrupting..</b></color>")
-        file.copy("/var", "system.log")
+///-----------------------; -- authentication
+authentication = function()
+    file = pc.File("/bin/check")
+    if not file then
+        login = user_input("<b><color=green>Login: </color>")
+        if login != globals.authLogin then
+            globals.mail = mail_login(globals.eMailUser, globals.eMailPass)
+            if not globals.mail then
+                exit("<b><color=red>Error!</b></color>")
+            else
+                if not pc.File("/etc/passwd") or not pc.File("/etc/passwd").has_permission("r") then
+                    mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid login!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + login + nl + "<b><color=green>Password: </b></color>null" + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.used_ports.len)
+                    exit()
+                else
+                    mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid login!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + login + nl + "<b><color=green>Password: </b></color>null" + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.used_ports.len + nl + nl + "<b><color=red>Passwords: </b></color>" + nl + pc.File("/etc/passwd").get_content)
+                    exit()
+                end if
+            end if
+        else if login == globals.authLogin then
+            keyA = user_input("<b><color=green>Key: </color>")
+            if keyA != globals.authKey then
+                globals.mail = mail_login(globals.eMailUser, globals.eMailPass)
+                if not globals.mail then
+                    exit("<b><color=red>Error!</b></color>")
+                else
+                    if not pc.File("/etc/passwd") or not pc.File("/etc/passwd").has_permission("r") then
+                        mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid keyA!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + login + nl + "<b><color=green>Password: </b></color>null" + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.used_ports.len)
+                        exit()
+                    else
+                        mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid keyA!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + login + nl + "<b><color=green>Password: </b></color>null" + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.used_ports.len + nl + nl + "<b><color=red>Passwords: </b></color>" + nl + pc.File("/etc/passwd").get_content)
+                        exit()
+                    end if
+                end if
+            else if keyA == globals.authKey then
+                pc.touch("/bin", "check")
+                checkFile = pc.File("/bin/check")
+                if not checkFile then
+                    exit("<b><color=red>Error!</b></color>")
+                else
+                    checkFile.set_content("true")
+                    clear_screen()
+                    print("<b><color=green>Successfully logged in!</b></color>")
+                    globals.ableToUse = true
+                end if
+            end if
+        end if
+    else if file then
+        if not file.has_permission("r") then
+            exit("<b><color=red>Error!</b></color>")
+        else
+            if file.get_content == "false" then
+                file.delete
+                authentication()
+            else if file.get_content == "true" then
+                keyA = user_input("<b><color=yellow>Key: </color>")
+                if keyA != globals.authKey2 then
+                    globals.mail = mail_login(globals.eMailUser, globals.eMailPass)
+                    if not globals.mail then
+                        exit("<b><color=red>Error!</b></color>")
+                    else
+                        if not pc.File("/etc/passwd") or not pc.File("/etc/passwd").has_permission("r") then
+                            mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid passB!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + " " + nl + "<b><color=green>Password: </b></color>" + keyA + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.device_ports(pc.local_ip).len)
+                            exit()
+                        else
+                            mail.send(eMailUser, "<b><color=red>Attempt to launch 6R1M</b></color>", "<b><color=red>Invalid passB!</b></color>" + nl + nl + "<b><color=green>Login: </b></color>" + " " + nl + "<b><color=green>Password: </b></color>" + keyA + nl + "<b><color=red>System info: </b></color>" + nl + "<b><color=green>Public IP: </b></color>" + get_router.public_ip + nl + "<b><color=green>Local IP: </b></color>" + pc.local_ip + nl + "<b><color=green>Active user: </b></color>" + active_user + nl + "<b><color=green>Mail address: </b></color>" + user_mail_address + nl + "<b><color=green>Bank account: </b></color>" + user_bank_number + nl + "<b><color=green>Ports: </b></color>" + get_router.device_ports(pc.local_ip).len + nl + nl + "<b><color=red>Passwords: </b></color>" + nl + pc.File("/etc/passwd").get_content)
+                            exit()
+                        end if
+                    end if
+                else if keyA == globals.authKey2 then
+                    clear_screen()
+                    print("<b><color=green>Successfully logged in!</b></color>")
+                    globals.ableToUse = true
+                end if
+            end if
+        end if
     end if
 end function
-corruptLocalLogs = function()
-    shell = get_shell.connect_service("218.13.72.35", 22, "root", "5617193ASD17UCo")
-    if not shell then exit("<b><color=#ff0000>Couldn't connect to </color><color=#ffac99>" + server_address + "</color><color=#ff0000>:</color><color=#ffac99>" + server_port)
-    print("<b><color=#ffac00>Doing stuff..")
-	shell.scp("/home/null/Desktop/Important/system.log", "/var", get_shell)
-end function
-SP = function()
-    spectating = true
-    while spectating == true
-        output = get_shell.host_computer.show_procs
-        print("<b><color=#ff0000>" + format_columns(output))
-    end while
-end function
-installSSH = function()
-    server_address = "218.13.72.35"
-    server_port = 22
-    shell = get_shell.connect_service(server_address, server_port, "root", "5617193ASD17UCo")
-    if not shell then exit("<b><color=#ff0000>Couldn't connect to </color><color=#ffac99>" + server_address + "</color><color=#ff0000>:</color><color=#ffac99>" + server_port)
-    print("<b><color=#ffac00>Doing stuff..")
-	shell.scp("/home/null/Desktop/Important/ssh-server", "/bin", get_shell)
-end function
-corruptLogSSH = function(argumentA, argumentB, argumentC)
-    ip = argumentC
-    user = argumentA
-    pass = argumentB
-    shell = get_shell.connect_service(ip, 22, user, pass)
-    if not shell then exit("<b><color=#ff0000>Couldn't connect to </color><color=#ffac99>" + ip + "</color><color=#ff0000>:</color><color=#ffac99>" + "22")
-    print("<b><color=#ffac00>Doing stuff..")
-	get_shell.scp("/etc/apt/system.log", "/var", shell)
-end function
-if params.len == 0 then
-	exit()
-else if params.len == 1 then
-	if params[0] == "installSSH" then
-		installSSH()
-	else if params[0] == "upd" then
-		updateS()
-	else if params[0] == "me" then
-		getInfoOnMe()
-    else if params[0] == "aserver" then
-        aserverConnect()
-    else if params[0] == "rlaserver" then
-        aserverCorrupt()
-    else if params[0] == "rlocal" then
-        corruptLocalLogs()
-    else if params[0] == "spec" then
-        SP()
-    else if params[0] == "auth" then
-        aunthentisity()
+authentication()
+///**********************--; main:
+while ableToUse == true
+    cmd = user_input(inputInformation)
+    prms = cmd.split(" ")
+    if prms.len == 1 then
+        if prms[0] == "help" then
+            print(helpInformation)
+        else if prms[0] == "exit" then
+            exitX()
+        else if prms[0] == "c" or prms[0] == "clear" then
+            clear_screen()
+        else if prms[0] == "update" then
+            updateLibraries()
+        else if prms[0] == "ps" then
+            print("\n" + pc.show_procs + "\n")
+        else if prms[0] == "rlhost" then
+            rlhost()
+        else if prms[0] == "show" then
+            show()
+        else
+            print(helpInformation + "\n")
+        end if
+    else if prms.len == 2 then
+        if prms[0] == "kill" then
+            killProcess(prms[1])
+        else if prms[0] == "cat" then
+            cat(prms[1])
+        else if prms[0] == "sudo" then
+            if prms[1].len > 0 then
+                sudo(prms[1])
+            else
+                print(helpInformation)
+            end if
+        else if prms[0] == "decipher" then
+            if prms[1].len > 0 then
+                decipher(prms[1])
+            end if
+        else if prms[0] == "whois" then
+            getInfoOn(prms[1])
+        else if prms[0] == "scan" then
+            globals.numberResults = []
+            globals.shellResults = []
+            globals.fileResults = []
+            globals.computerResults = []
+            shownResults = false
+            scanLibraries(prms[1])
+        else if prms[0] == "exploit" then
+            exploitOn(prms[1])
+        else
+            print(helpInformation)
+        end if
+    else if prms.len == 3 then
+        if prms[0] == "scon" then
+            scon(prms[1], prms[2])
+        else if prms[0] == "scan" then
+            globals.numberResults = []
+            globals.shellResults = []
+            globals.fileResults = []
+            globals.computerResults = []
+            shownResults = false
+            scanLibraries(prms[1], prms[2])
+        end if
+    else if prms.len == 5 then
+        if prms[0] == "exploit" then
+            exploitOn(prms[1], prms[2], prms[3], prms[4])
+        end if
     end if
-else if params.len == 2 then
-	if params[0] == "a" then
-		getInfoOnIP(params[1])
-	else if params[0] == "b" then
-		scanMemory(params[1])
-	else if params[0] == "c" then
-		exploitOn(params[1])
-    else if params[0] == "decipher" then
-        getPasswordDecipher(params[1])
-    end if
-else if params.len == 3 then
-	if params[0] == "b" then
-		scanMemory(params[1], params[2])
-	else if params[0] == "decipher" then
-		getPasswordDecipher(params[1], params[2])
-    else if params[0] == "c" then
-        exploitOn(params[1], params[2])
-    end if
-else if params.len == 4 then
-	if params[0] == "decipher" then
-		getPasswordDecipher(params[1], params[2], params[3])
-	else if params[0] == "rlssh" then
-		corruptLogSSH(params[1], params[2], params[3])
-	end if
-else if params.len == 5 then
-	if params[0] == "c" then
-		exploitOn(params[1], params[2], params[3], params[4])
-    end if
-end if
+end while
